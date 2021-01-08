@@ -7,6 +7,7 @@ import session from 'express-session'
 import connectMongo from 'connect-mongo'
 
 import routerUser from './routes/users.js'
+import routerProject from './routes/projects.js'
 
 dotenv.config()
 
@@ -56,6 +57,7 @@ app.use(session(sessionSettings))
 app.set('trust proxy', 1)
 
 app.use('/users', routerUser)
+app.use('/project', routerProject)
 
 app.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);

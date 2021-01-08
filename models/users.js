@@ -2,18 +2,49 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
+const FundRecordSchema = new Schema (
+  {
+    project: {
+      type: mongoose.ObjectId,
+      ref: 'projects'
+    },
+    name: {
+      type: String
+    },
+    phone: {
+      type: String
+    },
+    email: {
+      type: String
+    },
+    fundAmount: {
+      type: Number
+    }
+  },
+  {
+    versionKey: false
+  }
+)
+
 const userSchema = new Schema (
   {
     account: {
       type: String,
-      required: [true, '請填寫帳號名稱'],
+      minlength: [4 , '請輸入 4 個字以上'],
+      required: true,
       unique: true
     },
     password : {
       type: String,
-      required: [true, '請設定密碼']
+      minlength: [6 , '請輸入 6 個字以上'],
+      required: true
     },
-    projects: []
+    fundRecords: {
+      type: [FundRecordSchema]
+    },
+    wishlists: {
+      type: []
+    }
   },
   {
     versionKey: false
