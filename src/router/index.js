@@ -43,6 +43,15 @@ const routes = [
     }
   },
   {
+    path: '/projects/add',
+    name: 'Add',
+    component: () => import(/* webpackChunkName: "add" */ '../views/Projects/Add.vue'),
+    meta: {
+      title: '木沐 | 新增計畫',
+      needLogin: true
+    }
+  },
+  {
     path: '/projects/headphones',
     name: 'Headphones',
     component: () => import(/* webpackChunkName: "headphones" */ '../views/Projects/Headphones.vue'),

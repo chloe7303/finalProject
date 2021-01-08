@@ -25,8 +25,9 @@
         <v-tabs-slider color="amber"></v-tabs-slider>
       </v-tabs>
       <v-btn
-        :color="'grey light-1'"
-        size="32"
+        v-if="user.id.length"
+        color="grey"
+        class="subtitle-1"
         text
         @click="logout"
       >登出</v-btn>
@@ -61,6 +62,11 @@ export default {
           path: '/users/login'
         }
       ]
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
     }
   },
   methods: {

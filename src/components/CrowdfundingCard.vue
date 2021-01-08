@@ -15,7 +15,7 @@
           style="background: white"
         >
           <h1 class="headline mb-3 black--text font-weight-black">{{ project.title}}</h1>
-          <span class="body-1 grey--text text--darken-1">{{ project.description }}</span>
+          <span class="body-1 grey--text text--darken-1">{{ project.subTitle }}</span>
         </v-card-title>
         <v-progress-linear
           v-model="project.progress"
@@ -29,7 +29,7 @@
           <v-row class='flex-nowrap' no-gutters>
             <v-col cols='6'>
               <v-sheet tile class="text-lowercase white--text pl-3" color='transparent'>已募集</v-sheet>
-              <v-btn text dark class="font-weight-black headline">$ {{ project.raisedFund }}</v-btn>
+              <v-btn text dark class="font-weight-black headline">$ {{ project.raisedAmount }}</v-btn>
             </v-col>
             <v-col cols='6'>
               <v-row no-gutters justify='space-between'>
@@ -38,7 +38,7 @@
                 </v-col>
                 <v-col cols='auto'>
                   <v-sheet tile class="text-lowercase white--text pl-3 text-left" color='transparent'>目標金額</v-sheet>
-                  <v-btn text dark class="font-weight-black headline">$ {{ project.targetFund }}</v-btn>
+                  <v-btn text dark class="font-weight-black headline">$ {{ project.targetAmount }}</v-btn>
                 </v-col>
               </v-row>
             </v-col>

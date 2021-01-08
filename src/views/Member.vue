@@ -1,17 +1,17 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="12" sm="2">
+      <v-col cols="12" md="2">
         <v-sheet rounded="lg">
           <v-list>
             <v-list-item
-              v-for="n in 5"
-              :key="n"
+              v-for="list in lists"
+              :key="list.name"
               link
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  List Item {{ n }}
+                  {{ list.name }}
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -32,7 +32,7 @@
         </v-sheet>
       </v-col>
 
-      <v-col cols="12" sm="8">
+      <v-col cols="12" md="8">
         <v-sheet
           min-height="70vh"
           rounded="lg"
@@ -49,7 +49,10 @@ export default {
   name: 'Member',
   data () {
     return {
-
+      lists: [
+        { name: '募資紀錄' },
+        { name: '收藏清單' }
+      ]
     }
   }
 }

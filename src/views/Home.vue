@@ -1,21 +1,7 @@
 <template>
   <v-container >
     <v-row justify="center">
-      <v-col
-        cols="12"
-        xl="2"
-        class="d-none d-xl-block"
-      >
-        <v-sheet
-          rounded="lg"
-          min-height="268"
-          class="pa-8 pa-sm-10"
-        >
-          <h1 class="font-weight-bold pb-8">倒數募資</h1>
-          <Timeboard/>
-        </v-sheet>
-      </v-col>
-
+      <Timeboard/>
       <v-col
         cols="12"
         xl="8"
@@ -25,7 +11,12 @@
           rounded="lg"
           class="pa-8 pa-sm-10"
         >
-          <h1 class="font-weight-bold pb-8">募資計畫</h1>
+        <div class="d-flex mb-2">
+          <h1 class="font-weight-bold d-inline-block">募資計畫</h1>
+          <v-btn v-if="!user.id.length" class="ml-auto mr-8 black--text" fab color="amber" to="/projects/add">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
           <CrowdfundingCard/>
         </v-sheet>
       </v-col>
@@ -44,6 +35,11 @@ export default {
   components: {
     Timeboard,
     CrowdfundingCard
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
   }
 }
 </script>
