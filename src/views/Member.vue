@@ -8,23 +8,12 @@
               v-for="list in lists"
               :key="list.name"
               link
+              exact
+              :to="'/member' + list.path"
             >
               <v-list-item-content>
                 <v-list-item-title>
                   {{ list.name }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-divider class="my-2"></v-divider>
-
-            <v-list-item
-              link
-              color="grey lighten-4"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  Refresh
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -36,8 +25,9 @@
         <v-sheet
           min-height="70vh"
           rounded="lg"
+          class="pa-8 pa-sm-10"
         >
-          <!--  -->
+          <router-view></router-view>
         </v-sheet>
       </v-col>
     </v-row>
@@ -46,12 +36,22 @@
 
 <script>
 export default {
-  name: 'Member',
+  name: 'AddRecords',
   data () {
     return {
       lists: [
-        { name: '募資紀錄' },
-        { name: '收藏清單' }
+        {
+          name: '募資紀錄',
+          path: ''
+        },
+        {
+          name: '收藏清單',
+          path: '/wishlists'
+        },
+        {
+          name: '新增紀錄',
+          path: '/addRecords'
+        }
       ]
     }
   }

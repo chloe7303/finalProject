@@ -19,34 +19,34 @@
                   light
                 >
                   <v-img
-                    :src="'./images/headphones.jpg'"
+                    :src="project.image"
                     height="400px"
                   ></v-img>
 
                   <v-card-title>
-                    SUDO | 最輕薄的耳機
+                    {{ project.title }}
                   </v-card-title>
                   <v-card-subtitle class="subtitle-1 black--text">
-                    耳機界的頂級規格，以最高CP值打造零噪音之聆聽環境，讓喜歡享受音樂的你有更好的體驗。
+                    {{ project.subTitle }}
                   </v-card-subtitle>
                   <v-card-text>
-                    SUDO 無線耳機結合各種獨家技術，在任何環境皆清晰無比的通話品質、耐用材質以及舒適貼合的設計，提供您絕對的無線自由。結合 TriPort 技術與 Active EQ 功能的 SoundLink 無線耳機，在任何音量都能呈現清脆震撼的音效。想要帶著音樂隨處走，就要有能夠跟上您腳步的耳機。本產品結合防撞材質、玻璃纖維尼龍和抗腐蝕不鏽鋼，能滿足行動生活中的各種挑戰。
+                    {{ project.description }}
                   </v-card-text>
                 </v-card>
               </v-col>
               <v-col cols="12" md="4" class="mt-8">
                 <div class="mb-16">
-                  <h1 class="mb-2">SUDO | 最輕薄的耳機</h1>
-                  <h3>耳機界的頂級規格，以最高CP值打造零噪音之聆聽環境，讓喜歡享受音樂的你有更好的體驗。</h3>
+                  <h1 class="mb-2">{{ project.title }}</h1>
+                  <h3>{{ project.subTitle }}</h3>
                 </div>
                 <div class="mb-12">
-                  <h3>提案人： </h3>
-                  <h3>目標金額： </h3>
-                  <h3 class="mb-4">已募資金額： </h3>
+                  <h3>提案人： {{ project.proposer }}</h3>
+                  <h3>目標金額： {{ project.targetAmount }}</h3>
+                  <h3 class="mb-4">已募資金額： {{ project.raisedAmount }}</h3>
                   <v-progress-linear
                   v-model="progress"
                   color="amber"
-                  height="15"
+                  height="20"
                   >
                     <strong class="blue-grey--text text--darken-2">{{ Math.ceil(progress) }}%</strong>
                   </v-progress-linear>
@@ -55,7 +55,7 @@
                   <v-btn
                     color="amber"
                     x-large
-                    to="/projects/payment"
+                    :to="'/payment/' + project._id"
                     class="mr-4"
                   >
                     <h2 class="blue-grey--text text--darken-2">贊助專案</h2>
@@ -84,7 +84,13 @@ export default {
   data () {
     return {
       show: false,
-      progress: 75
+      project: ''
+    }
+  },
+  computed: {
+    progress () {
+      const result = (this.project.raisedAmount / this.project.targetAmount) * 100
+      return result
     }
   },
   methods: {
@@ -92,6 +98,20 @@ export default {
       this.$store.commit('addItemToList', { itemId: index })
       this.$store.commit('updateSnackbar', { show: true })
     }
+  },
+  mounted () {
+    this.axios.get(process.env.VUE_APP_API + '/projects?id=' + this.$route.params.id)
+      .then(res => {
+        if (res.data.success) {
+          this.project = res.data.result[0]
+          this.project.image = process.env.VUE_APP_API + '/projects/image/' + this.project.image
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err => {
+        alert(err.response.data.message)
+      })
   }
 }
 </script>

@@ -3,9 +3,10 @@
     <v-row justify="center">
       <v-card
       min-width="320" max-width="320" elevation="24" color="blue-grey"
-      v-for="project in $store.state.projects" :key="project.id" class="ma-5" :to="project.link"
+      v-for="project in projects" :key="project.
+      _id" class="ma-5" :to="'/projects/' + project._id"
       >
-        <v-img :src="project.file" height="210">
+        <v-img :src="project.image" height="210">
           <v-btn icon large color="red" absolute bottom right @click.prevent="addToList">
             <v-icon>mdi-heart</v-icon>
           </v-btn>
@@ -54,13 +55,33 @@ export default {
   name: 'CrowdfundingCard',
   data () {
     return {
+      projects: []
     }
+  },
+  computed: {
   },
   methods: {
     addToList (index) {
       this.$store.commit('addItemToList', { itemId: index })
       this.$store.commit('updateSnackbar', true)
     }
+  },
+  mounted () {
+    this.axios.get(process.env.VUE_APP_API + '/projects')
+      .then(res => {
+        if (res.data.success) {
+          this.projects = res.data.result.map(project => {
+            project.image = process.env.VUE_APP_API + '/projects/image/' + project.image
+            project.progress = Math.ceil((project.raisedAmount / project.targetAmount) * 100)
+            return project
+          })
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err => {
+        alert(err.response.data.message)
+      })
   }
 }
 </script>

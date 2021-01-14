@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Persistedstate from 'vuex-persistedstate'
-import projects from '../projects.js'
 
 Vue.use(Vuex)
 
@@ -9,7 +8,6 @@ export default new Vuex.Store({
   // production 時要關閉 strict mode
   strict: true,
   state: {
-    projects,
     snackbar: {
       show: false,
       message: '加入收藏清單！'

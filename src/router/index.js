@@ -16,6 +16,33 @@ const routes = [
     }
   },
   {
+    path: '/add',
+    name: 'Add',
+    component: () => import(/* webpackChunkName: "add" */ '../views/Projects/Add.vue'),
+    meta: {
+      title: '木沐 | 新增計畫',
+      needLogin: true
+    }
+  },
+  {
+    path: '/projects/:id',
+    name: 'Headphones',
+    component: () => import(/* webpackChunkName: "headphones" */ '../views/Projects/Headphones.vue'),
+    meta: {
+      title: '',
+      needLogin: false
+    }
+  },
+  {
+    path: '/payment/:id',
+    name: 'Payment',
+    component: () => import(/* webpackChunkName: "payment" */ '../views/Projects/Payment.vue'),
+    meta: {
+      title: '木沐 | 付款頁面',
+      needLogin: true
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
@@ -26,12 +53,40 @@ const routes = [
   },
   {
     path: '/member',
-    name: 'Member',
     component: () => import(/* webpackChunkName: "member" */ '../views/Member.vue'),
     meta: {
       title: '木沐 | 個人頁面',
       needLogin: true
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'FundRecords',
+        component: () => import(/* webpackChunkName: "fundRecords" */ '../views/Member/FundRecords.vue'),
+        meta: {
+          title: '木沐 | 募資紀錄',
+          needLogin: true
+        }
+      },
+      {
+        path: 'wishlists',
+        name: 'Wishlists',
+        component: () => import(/* webpackChunkName: "wishlists" */ '../views/Member/Wishlists.vue'),
+        meta: {
+          title: '木沐 | 收藏清單',
+          needLogin: true
+        }
+      },
+      {
+        path: 'addRecords',
+        name: 'AddRecords',
+        component: () => import(/* webpackChunkName: "addRecords" */ '../views/Member/AddRecords.vue'),
+        meta: {
+          title: '木沐 | 新增紀錄',
+          needLogin: true
+        }
+      }
+    ]
   },
   {
     path: '/users/:action',
@@ -40,33 +95,6 @@ const routes = [
     meta: {
       title: '木沐 | 登入/註冊',
       needLogin: false
-    }
-  },
-  {
-    path: '/projects/add',
-    name: 'Add',
-    component: () => import(/* webpackChunkName: "add" */ '../views/Projects/Add.vue'),
-    meta: {
-      title: '木沐 | 新增計畫',
-      needLogin: true
-    }
-  },
-  {
-    path: '/projects/headphones',
-    name: 'Headphones',
-    component: () => import(/* webpackChunkName: "headphones" */ '../views/Projects/Headphones.vue'),
-    meta: {
-      title: 'SUDO | 最輕薄的無線耳機',
-      needLogin: false
-    }
-  },
-  {
-    path: '/projects/payment',
-    name: 'Payment',
-    component: () => import(/* webpackChunkName: "payment" */ '../views/Projects/Payment.vue'),
-    meta: {
-      title: '木沐 | 付款頁面',
-      needLogin: true
     }
   },
   {

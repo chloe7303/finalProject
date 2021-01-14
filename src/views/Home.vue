@@ -13,7 +13,7 @@
         >
         <div class="d-flex mb-2">
           <h1 class="font-weight-bold d-inline-block">募資計畫</h1>
-          <v-btn v-if="!user.id.length" class="ml-auto mr-8 black--text" fab color="amber" to="/projects/add">
+          <v-btn v-if="user.id.length" class="ml-auto mr-8 black--text" fab color="amber" to="/add">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>

@@ -11,7 +11,7 @@
           class="pa-8 pa-sm-10"
         >
           <h1 class="font-weight-bold">新增計畫</h1>
-          <form class="pa-6">
+          <form class="pa-6" @submit.prevent="submit">
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
@@ -54,15 +54,15 @@
                   @blur="$v.targetAmount.$touch()"
                   color="white"
                   outlined
+                  append-icon="mdi-currency-twd"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
                 <v-file-input
-                  v-model="images"
-                  :error-messages="imagesErrors"
+                  v-model="image"
+                  :error-messages="imageErrors"
                   show-size
                   counter
-                  multiple
                   label="上傳圖片"
                   color="white"
                 ></v-file-input>
@@ -81,12 +81,12 @@
 
           <v-btn
             class="mr-4 black--text"
-            @click="submit"
+            type="submit"
             color="amber"
           >
             新增
           </v-btn>
-          <v-btn text @click="e6 = 2">
+          <v-btn text to="/">
             返回
           </v-btn>
           </form>
@@ -108,7 +108,7 @@ export default {
     proposer: { required },
     targetAmount: { required, numeric },
     description: { maxLength: maxLength(300) },
-    images: { required }
+    image: { required }
   },
   data () {
     return {
@@ -116,7 +116,7 @@ export default {
       subTitle: '',
       proposer: '',
       targetAmount: '',
-      images: [],
+      image: '',
       description: ''
     }
   },
@@ -150,10 +150,10 @@ export default {
       !this.$v.targetAmount.required && errors.push('必填欄位')
       return errors
     },
-    imagesErrors () {
+    imageErrors () {
       const errors = []
-      if (!this.$v.images.$dirty) return errors
-      !this.$v.images.required && errors.push('必填欄位')
+      if (!this.$v.image.$dirty) return errors
+      !this.$v.image.required && errors.push('必填欄位')
       return errors
     },
     descriptionErrors () {
@@ -169,8 +169,41 @@ export default {
       this.$v.$touch()
       if (this.$v.$invalid) return
 
-      alert('以新增計畫')
-      this.$router.push('/')
+      if (this.image.size > 1024 * 1024) {
+        alert('圖片請小於 1MB')
+      } else if (!this.image.type.includes('image')) {
+        alert('檔案格式錯誤')
+      } else {
+        const formData = new FormData()
+        formData.append('image', this.image)
+        formData.append('title', this.title)
+        formData.append('subTitle', this.subTitle)
+        formData.append('proposer', this.proposer)
+        formData.append('targetAmount', this.targetAmount)
+        formData.append('description', this.description)
+
+        this.axios.post(process.env.VUE_APP_API + '/projects/add', formData)
+          .then(res => {
+            if (res.data.success) {
+              alert('已新增計畫')
+              // 清空表單
+              this.title = ''
+              this.subTitle = ''
+              this.proposer = ''
+              this.targetAmount = ''
+              this.image = ''
+              this.description = ''
+              this.$v.$reset()
+              // 回主頁
+              this.$router.push('/')
+            } else {
+              alert(res.data.message)
+            }
+          })
+          .catch(err => {
+            alert(err.response.data.message)
+          })
+      }
     }
   }
 }

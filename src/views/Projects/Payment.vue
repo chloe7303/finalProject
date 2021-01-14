@@ -33,14 +33,14 @@
             >
               <div class="d-flex fill-height">
                 <div>
-                  <v-img :src="'./images/headphones.jpg'" width="300px" class="rounded-l fill-height" position="center center"></v-img>
+                  <v-img :src="project.image" width="300px" class="rounded-l fill-height" position="center center"></v-img>
                 </div>
                 <div class="d-flex flex-column justify-center">
                   <v-card-title class="pt-0">
-                    計畫名稱
+                    {{ project.title }}
                   </v-card-title>
                   <v-card-subtitle>
-                    計畫說明
+                    {{ project.subTitle }}
                   </v-card-subtitle>
                 </div>
               </div>
@@ -51,7 +51,7 @@
             >
               下一步
             </v-btn>
-            <v-btn text @click="$router.replace('headphones')">
+            <v-btn text :to="'/projects/' + project._id">
               返回
             </v-btn>
           </v-stepper-content>
@@ -65,23 +65,31 @@
           </v-stepper-step>
 
           <v-stepper-content step="2">
-            <v-radio-group
-              v-model="show"
-              column
-            >
-              <v-radio
-                label="信用卡付款"
-                color="amber"
-                :value="true"
-              ></v-radio>
-              <h1 v-if="show">信用卡</h1>
-              <v-radio
-                label="ATM 機器轉帳或銀行臨櫃繳款"
-                color="amber"
-                :value="false"
-              ></v-radio>
-              <h1 v-if="!show">ATM</h1>
-            </v-radio-group>
+            <v-theme-provider light>
+              <v-radio-group
+                v-model="show"
+                column
+              >
+                <v-radio
+                  label="信用卡付款"
+                  color="amber"
+                  :value="true"
+                  class="mb-5"
+                  dark
+                ></v-radio>
+                  <v-expand-transition>
+                    <CreditCard v-if="show"/>
+                  </v-expand-transition>
+                <v-radio
+                  label="ATM 機器轉帳或銀行臨櫃繳款"
+                  color="amber"
+                  :value="false"
+                  class="mt-10"
+                  dark
+                ></v-radio>
+                <h1 v-if="!show" class="white--text">ATM</h1>
+              </v-radio-group>
+            </v-theme-provider>
             <v-btn
               color="blue-grey"
               @click="e6 = 3"
@@ -127,23 +135,40 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-          <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="電子信箱"
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-            color="white"
-          ></v-text-field>
-          <v-select
-            v-model="fundAmount"
-            :items="items"
-            :error-messages="fundAmountErrors"
-            label="贊助金額"
-            @change="$v.fundAmount.$touch()"
-            @blur="$v.fundAmount.$touch()"
-            color="white"
-          ></v-select>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="email"
+                    :error-messages="emailErrors"
+                    label="電子信箱"
+                    @input="$v.email.$touch()"
+                    @blur="$v.email.$touch()"
+                    color="white"
+                    class="mb-10"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="11">
+                  <v-slider
+                    v-model="fundAmount"
+                    label="贊助金額"
+                    max="10000"
+                    min="0"
+                    step="1000"
+                    thumb-label="always"
+                    thumb-size="35"
+                    ticks
+                    color="blue-grey"
+                    :error-messages="fundAmountErrors"
+                    @change="$v.fundAmount.$touch()"
+                    @blur="$v.fundAmount.$touch()"
+                  ></v-slider>
+                </v-col>
+                <v-col cols="12" md="1">
+                  <v-text-field v-model="fundAmount" type="number" prefix="$"></v-text-field>
+                </v-col>
+              </v-row>
           <v-checkbox
             v-model="checkbox"
             :error-messages="checkboxErrors"
@@ -176,12 +201,14 @@
 
 <script>
 import Timeboard from '../../components/Timeboard.vue'
+import CreditCard from '../../components/CreditCard.vue'
 import { required, maxLength, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'Payment',
   components: {
-    Timeboard
+    Timeboard,
+    CreditCard
   },
 
   // 表單驗證
@@ -198,19 +225,13 @@ export default {
   },
   data () {
     return {
+      project: '',
       e6: 1,
       show: true,
       name: '',
       phone: '',
       email: '',
       fundAmount: null,
-      items: [
-        '$1000',
-        '$2000',
-        '$3000',
-        '$4000',
-        '$5000'
-      ],
       checkbox: false
     }
   },
@@ -258,6 +279,20 @@ export default {
       alert('表單已送出')
       this.$router.replace('headphones')
     }
+  },
+  mounted () {
+    this.axios.get(process.env.VUE_APP_API + '/projects?id=' + this.$route.params.id)
+      .then(res => {
+        if (res.data.success) {
+          this.project = res.data.result[0]
+          this.project.image = process.env.VUE_APP_API + '/projects/image/' + this.project.image
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err => {
+        alert(err.response.data.message)
+      })
   }
 }
 </script>
