@@ -11,6 +11,11 @@ const Schema = mongoose.Schema
 // )
 const projectSchema = new Schema (
   {
+    user: {
+      type: String,
+      // ref: 'users',
+      required: true
+    },
     title: {
       type: String,
       required: [true, '請填寫標題名稱'],
@@ -41,7 +46,7 @@ const projectSchema = new Schema (
       type: Boolean,
       default: false
     },
-    file: {
+    image: {
       type: String,
       required: [true, '請上傳圖片']
     }

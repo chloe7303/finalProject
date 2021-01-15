@@ -2,7 +2,19 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
-const FundRecordSchema = new Schema (
+const wishSchema = new Schema (
+  {
+    project: {
+      type: mongoose.ObjectId,
+      ref: 'projects'
+    }
+  },
+  {
+    versionKey: false
+  }
+)
+
+const fundSchema = new Schema (
   {
     project: {
       type: mongoose.ObjectId,
@@ -40,10 +52,10 @@ const userSchema = new Schema (
       required: true
     },
     fundRecords: {
-      type: [FundRecordSchema]
+      type: [fundSchema]
     },
     wishlists: {
-      type: []
+      type: [wishSchema]
     }
   },
   {

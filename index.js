@@ -57,7 +57,12 @@ app.use(session(sessionSettings))
 app.set('trust proxy', 1)
 
 app.use('/users', routerUser)
-app.use('/project', routerProject)
+app.use('/projects', routerProject)
+
+// error handler
+app.use((_, req, res, next) => {
+  res.status(500).send({ success: false, message: '伺服器錯誤' })
+})
 
 app.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);

@@ -16,7 +16,7 @@ export const register = async (req, res) => {
         account: req.body.account,
         password: md5(req.body.password)
       })
-      res.status(200).send({ success: true, message: '' })
+      res.status(201).send({ success: true, message: '' })
     }
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -79,3 +79,25 @@ export const heartbeat = async (req, res) => {
   }
   res.status(200).send(isLogin)
 }
+
+// 募資紀錄
+// export const fund = async (req, res) => {
+//   try {
+//     let data = await users.findByIdAndUpdate(req.params.user, 
+//       {
+//         // 新增到使用者的 fundRecords 陣列
+//         $push: {
+//           fundRecords: {
+//             project: '',
+//             name: req.body.name,
+//             phone: req.body.phone,
+//             email: req.body.email,
+//             fundAmount: req.body.fundAmount
+//           }
+//         }
+//       }
+//     , {new: true})
+//   } catch (error) {
+//     console.log(err)
+//   }
+// }

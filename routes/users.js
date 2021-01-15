@@ -11,5 +11,7 @@ router.post('/login', login)
 router.delete('/logout', logout)
 // 判斷是否登入
 router.get('/heartbeat', heartbeat)
+// 新增募資紀錄
+// router.post('/fund/:user', fund)
 
 export default router
