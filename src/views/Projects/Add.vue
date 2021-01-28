@@ -11,47 +11,39 @@
           class="pa-8 pa-sm-10"
         >
           <h1 class="font-weight-bold">新增計畫</h1>
-          <form class="pa-6" @submit.prevent="submit">
+          <v-form class="pa-6" @submit.prevent="submit" ref="form">
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="title"
-                  :error-messages="titleErrors"
+                  :rules="titleRules"
                   :counter="15"
                   label="標題"
-                  @input="$v.title.$touch()"
-                  @blur="$v.title.$touch()"
                   color="white"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="proposer"
-                  :error-messages="proposerErrors"
+                  :rules="proposerRules"
                   label="提案人"
-                  @input="$v.proposer.$touch()"
-                  @blur="$v.proposer.$touch()"
                   color="white"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-text-field
-              v-model="subTitle"
-              :error-messages="subTitleErrors"
+              v-model="subtitle"
+              :rules="subtitleRules"
               :counter="50"
               label="副標題"
-              @input="$v.subTitle.$touch()"
-              @blur="$v.subTitle.$touch()"
               color="white"
             ></v-text-field>
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="targetAmount"
-                  :error-messages="targetAmountErrors"
+                  :rules="targetAmountRules"
                   label="目標金額"
-                  @input="$v.targetAmount.$touch()"
-                  @blur="$v.targetAmount.$touch()"
                   color="white"
                   outlined
                   append-icon="mdi-currency-twd"
@@ -59,8 +51,9 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-file-input
+                  accept="image/*"
                   v-model="image"
-                  :error-messages="imageErrors"
+                  :rules="imageRules"
                   show-size
                   counter
                   label="上傳圖片"
@@ -70,18 +63,43 @@
             </v-row>
             <v-textarea
               v-model="description"
-              :error-messages="descriptionErrors"
+              :rules="descriptionRules"
               :counter="300"
               label="計畫說明"
-              @input="$v.description.$touch()"
-              @blur="$v.description.$touch()"
               color="white"
               class="mb-4"
             ></v-textarea>
-
+            <!-- date picker -->
+            <v-row class="mb-6">
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <v-date-picker
+                  v-model="dates"
+                  range
+                  color="blue-grey"
+                  :first-day-of-week="0"
+                  locale="zh-cn"
+                  :landscape="true"
+                  min="2020-01-20"
+                ></v-date-picker>
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <v-text-field
+                  v-model="dateRangeText"
+                  label="計畫期間"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                ></v-text-field>
+              </v-col>
+            </v-row>
           <v-btn
-            class="mr-4 black--text"
             type="submit"
+            class="mr-4 black--text"
             color="amber"
           >
             新增
@@ -89,7 +107,7 @@
           <v-btn text to="/">
             返回
           </v-btn>
-          </form>
+          </v-form>
         </v-sheet>
       </v-col>
     </v-row>
@@ -97,111 +115,112 @@
 </template>
 
 <script>
-import { required, minLength, maxLength, numeric } from 'vuelidate/lib/validators'
-
 export default {
   name: 'Add',
-  // 表單驗證
-  validations: {
-    title: { required, minLength: minLength(4), maxLength: maxLength(15) },
-    subTitle: { maxLength: maxLength(50) },
-    proposer: { required },
-    targetAmount: { required, numeric },
-    description: { maxLength: maxLength(300) },
-    image: { required }
-  },
   data () {
     return {
       title: '',
-      subTitle: '',
+      subtitle: '',
       proposer: '',
       targetAmount: '',
       image: '',
-      description: ''
+      description: '',
+      // 表單驗證
+      titleRules: [
+        v => !!v || '必填欄位',
+        v => v.length >= 4 || '請輸入 4 個字以上',
+        v => v.length <= 15 || '請輸入 15 個字以下'
+      ],
+      proposerRules: [
+        v => !!v || '必填欄位'
+      ],
+      subtitleRules: [
+        v => !!v || '必填欄位',
+        v => v.length <= 15 || '請輸入 50 個字以下'
+      ],
+      targetAmountRules: [
+        v => !!v || '必填欄位',
+        v => !isNaN(v) || '請輸入數字'
+      ],
+      imageRules: [
+        v => !!v || '請上傳圖片'
+      ],
+      descriptionRules: [
+        v => !!v || '必填欄位',
+        v => v.length <= 300 || '請輸入 300 個字以下'
+      ],
+      // 日期
+      dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)]
     }
   },
 
   computed: {
-    titleErrors () {
-      const errors = []
-      if (!this.$v.title.$dirty) return errors
-      !this.$v.title.minLength && errors.push('請輸入 4 個字以上')
-      if (!this.$v.title.$dirty) return errors
-      !this.$v.title.maxLength && errors.push('請輸入 15 個字以下')
-      !this.$v.title.required && errors.push('必填欄位')
-      return errors
-    },
-    subTitleErrors () {
-      const errors = []
-      if (!this.$v.subTitle.$dirty) return errors
-      !this.$v.subTitle.maxLength && errors.push('請輸入 50 個字以下')
-      return errors
-    },
-    proposerErrors () {
-      const errors = []
-      if (!this.$v.proposer.$dirty) return errors
-      !this.$v.proposer.required && errors.push('必填欄位')
-      return errors
-    },
-    targetAmountErrors () {
-      const errors = []
-      if (!this.$v.targetAmount.$dirty) return errors
-      !this.$v.targetAmount.numeric && errors.push('請輸入數字')
-      !this.$v.targetAmount.required && errors.push('必填欄位')
-      return errors
-    },
-    imageErrors () {
-      const errors = []
-      if (!this.$v.image.$dirty) return errors
-      !this.$v.image.required && errors.push('必填欄位')
-      return errors
-    },
-    descriptionErrors () {
-      const errors = []
-      if (!this.$v.description.$dirty) return errors
-      !this.$v.description.maxLength && errors.push('請輸入 300 個字以下')
-      return errors
+    dateRangeText () {
+      return this.dates.join(' ~ ')
     }
   },
 
   methods: {
     submit () {
-      this.$v.$touch()
-      if (this.$v.$invalid) return
+      if (!this.$refs.form.validate()) return
 
       if (this.image.size > 1024 * 1024) {
-        alert('圖片請小於 1MB')
+        this.$swal({
+          icon: 'warning',
+          iconColor: '#FFC107',
+          title: '圖片請小於 1MB',
+          confirmButtonColor: '#607D8B',
+          confirmButtonText: '確定'
+        })
       } else if (!this.image.type.includes('image')) {
-        alert('檔案格式錯誤')
+        this.$swal({
+          icon: 'warning',
+          iconColor: '#FFC107',
+          title: '檔案格式錯誤',
+          confirmButtonColor: '#607D8B',
+          confirmButtonText: '確定'
+        })
       } else {
         const formData = new FormData()
         formData.append('image', this.image)
         formData.append('title', this.title)
-        formData.append('subTitle', this.subTitle)
+        formData.append('subtitle', this.subtitle)
         formData.append('proposer', this.proposer)
         formData.append('targetAmount', this.targetAmount)
         formData.append('description', this.description)
+        formData.append('begin', this.dates[0])
+        formData.append('finish', this.dates[1])
 
         this.axios.post(process.env.VUE_APP_API + '/projects/add', formData)
           .then(res => {
             if (res.data.success) {
-              alert('已新增計畫')
+              this.$swal({
+                icon: 'success',
+                iconColor: '#FFC107',
+                title: '已新增計畫',
+                confirmButtonColor: '#607D8B',
+                confirmButtonText: '確定'
+              })
               // 清空表單
-              this.title = ''
-              this.subTitle = ''
-              this.proposer = ''
-              this.targetAmount = ''
-              this.image = ''
-              this.description = ''
-              this.$v.$reset()
+              this.$refs.form.reset()
               // 回主頁
               this.$router.push('/')
             } else {
-              alert(res.data.message)
+              this.$swal({
+                icon: 'error',
+                title: res.data.message,
+                confirmButtonColor: '#607D8B',
+                confirmButtonText: '確定'
+              })
             }
           })
           .catch(err => {
-            alert(err.response.data.message)
+            this.$swal({
+              icon: 'error',
+              title: err.response.data.message,
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
           })
       }
     }

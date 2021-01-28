@@ -1,6 +1,6 @@
 <template>
-  <div id="addRecords">
-    <h1 class="font-weight-bold mb-6">新增紀錄</h1>
+  <div id="adminProjects">
+    <h1 class="font-weight-bold mb-6">所有計畫</h1>
     <h3 class="font-weight-bold mb-2">共 {{ projects.length }} 筆資料</h3>
     <v-card
       max-width="100%"
@@ -16,7 +16,7 @@
               label="計畫標題"
               v-model="project.titleModel"
               :rules="titleRules"
-              counter="10"
+              counter="15"
               color="blue-grey"
               outlined
               clearable
@@ -120,17 +120,16 @@
 
 <script>
 export default {
-  name: 'AddRecords',
+  name: 'adminProjects',
   data () {
     return {
       projects: [],
       titleRules: [
         v => !!v || '必填欄位',
-        v => v.length <= 10 || '請輸入 10 個字以下',
+        v => v.length <= 15 || '請輸入 15 個字以下',
         v => v.length >= 4 || '請輸入 4 個字以上'
       ],
       subtitleRules: [
-        v => !!v || '必填欄位',
         v => v.length <= 50 || '請輸入 50 個字以下'
       ],
       descriptionRules: [
@@ -180,8 +179,7 @@ export default {
       project.subtitleModel = project.subtitle
       project.descriptionModel = project.description
     },
-    save (project) {
-      // console.log(!this.$refs.form[0].validate())
+    save (project, i) {
       if (!this.$refs.form[0].validate()) return
 
       this.axios.patch(`${process.env.VUE_APP_API}/projects/${project._id}`, { title: project.titleModel, subtitle: project.subtitleModel, description: project.descriptionModel })
@@ -211,7 +209,7 @@ export default {
     }
   },
   mounted () {
-    this.axios.get(`${process.env.VUE_APP_API}/projects?user=${this.user.id}`)
+    this.axios.get(`${process.env.VUE_APP_API}/projects`)
       .then(res => {
         if (res.data.success) {
           this.projects = res.data.result.map(project => {

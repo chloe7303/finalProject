@@ -1,7 +1,10 @@
 <template>
   <v-container >
     <v-row justify="center">
-      <Timeboard/>
+      <v-col cols="12" xl="2" class="d-none d-xl-block">
+      <Timeboard class="mb-6"/>
+      <History/>
+      </v-col>
       <v-col
         cols="12"
         xl="8"
@@ -26,6 +29,7 @@
 
 <script>
 import Timeboard from '../components/Timeboard.vue'
+import History from '../components/History.vue'
 import CrowdfundingCard from '../components/CrowdfundingCard.vue'
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
@@ -34,6 +38,7 @@ export default {
   name: 'Home',
   components: {
     Timeboard,
+    History,
     CrowdfundingCard
   },
   computed: {

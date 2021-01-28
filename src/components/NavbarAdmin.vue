@@ -1,5 +1,5 @@
 <template>
-  <div id="navbar">
+  <div id="navbarAdmin">
     <v-app-bar
       app
       flat
@@ -45,23 +45,8 @@ export default {
       links: [
         {
           tab: 1,
-          title: '募資計畫',
-          path: '/'
-        },
-        {
-          tab: 2,
-          title: '關於木沐',
-          path: '/about'
-        },
-        {
-          tab: 3,
-          title: '個人頁面',
-          path: '/member'
-        },
-        {
-          tab: 4,
-          title: '登入/註冊',
-          path: '/users/login'
+          title: '管理者頁面',
+          path: '/admin'
         }
       ]
     }

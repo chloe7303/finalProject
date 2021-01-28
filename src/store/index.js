@@ -8,28 +8,12 @@ export default new Vuex.Store({
   // production 時要關閉 strict mode
   strict: true,
   state: {
-    snackbar: {
-      show: false,
-      message: '加入收藏清單！'
-    },
-    list: [],
     user: {
       name: '',
       id: ''
     }
   },
   mutations: {
-    addItemToList (state, { itemId }) {
-      const idx = state.list.findIndex((project) => {
-        return project.itemId === itemId
-      })
-      if (idx === -1) {
-        state.list.push({ itemId })
-      }
-    },
-    updateSnackbar (state, settings) {
-      state.snackbar.show = settings
-    },
     login (state, data) {
       state.user.name = data.account
       state.user.id = data._id

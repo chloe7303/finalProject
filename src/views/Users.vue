@@ -155,6 +155,9 @@ export default {
     }
   },
   computed: {
+    user () {
+      return this.$store.state.user
+    },
     loginAccountErrors () {
       const errors = []
       if (!this.$v.loginForm.account.$dirty) return errors
@@ -207,22 +210,37 @@ export default {
       this.$v.registerForm.$touch()
       if (this.$v.registerForm.$invalid) return
 
-      this.axios.post(process.env.VUE_APP_API + '/users/register', { account: this.registerForm.account, password: this.registerForm.password })
+      this.axios.post(`${process.env.VUE_APP_API}/users/register`, { account: this.registerForm.account, password: this.registerForm.password })
         .then(res => {
           if (res.data.success) {
-            alert('註冊成功')
+            this.$swal({
+              icon: 'success',
+              iconColor: '#FFC107',
+              title: '註冊成功',
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
             this.step--
             this.registerForm.account = ''
             this.registerForm.password = ''
             this.registerForm.repeatPassword = ''
             this.$v.registerForm.$reset()
           } else {
-            alert(res.data.message)
+            this.$swal({
+              icon: 'error',
+              title: res.data.message,
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
           }
         })
         .catch(err => {
-          alert(err.response.data.message)
-          // console.log(err.response.data.message)
+          this.$swal({
+            icon: 'error',
+            title: err.response.data.message,
+            confirmButtonColor: '#607D8B',
+            confirmButtonText: '確定'
+          })
           this.registerForm.account = ''
           this.registerForm.password = ''
           this.registerForm.repeatPassword = ''
@@ -233,24 +251,43 @@ export default {
       this.$v.loginForm.$touch()
       if (this.$v.loginForm.$invalid) return
 
-      this.axios.post(process.env.VUE_APP_API + '/users/login', { account: this.loginForm.account, password: this.loginForm.password })
+      this.axios.post(`${process.env.VUE_APP_API}/users/login`, { account: this.loginForm.account, password: this.loginForm.password })
         .then(res => {
           // console.log(res)
           if (res.data.success) {
             this.$store.commit('login', res.data.result)
-            alert('登入成功')
-            this.$router.push('/')
+            this.$swal({
+              icon: 'success',
+              iconColor: '#FFC107',
+              title: '登入成功',
+              showConfirmButton: false,
+              timer: 2000
+            })
+            if (this.loginForm.account === 'admin') {
+              this.$router.push('/admin')
+            } else {
+              this.$router.push('/')
+            }
             this.loginForm.account = ''
             this.loginForm.password = ''
             this.loginForm.repeatPassword = ''
             this.$v.loginForm.$reset()
           } else {
-            alert(res.data.message)
+            this.$swal({
+              icon: 'error',
+              title: res.data.message,
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
           }
         })
         .catch(err => {
-          alert(err.response.data.message)
-          // console.log(err.response.data.message)
+          this.$swal({
+            icon: 'error',
+            title: err.response.data.message,
+            confirmButtonColor: '#607D8B',
+            confirmButtonText: '確定'
+          })
           this.loginForm.account = ''
           this.loginForm.password = ''
           this.loginForm.repeatPassword = ''
@@ -262,6 +299,16 @@ export default {
     source: String
   },
   mounted () {
+    if (this.user.id) {
+      this.$swal({
+        icon: 'warning',
+        iconColor: '#FFC107',
+        title: '已登入',
+        showConfirmButton: false,
+        timer: 2000
+      })
+      this.$router.push('/')
+    }
     if (this.$route.params.action === 'login') {
       this.step = 1
     } else if (this.$route.params.action === 'register') {

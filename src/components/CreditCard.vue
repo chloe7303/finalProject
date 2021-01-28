@@ -13,7 +13,7 @@
       <v-col cols="6">
         <v-subheader class="black--text pl-0 subheader">持卡人</v-subheader>
         <v-text-field
-          single-line outlined hide-details color="blue-grey" style="color:black;" label="王阿肥"
+          single-line outlined hide-details color="blue-grey" label="黃珈崎"
         />
       </v-col>
 
@@ -26,15 +26,15 @@
 
       <v-col col="4">
         <v-subheader class="black--text pl-0 subheader">有效期限</v-subheader>
-        <v-select
-          :items="MonthList" label="月份" outlined hide-details
+        <v-text-field
+          single-line outlined hide-details color="blue-grey" label="04"
         />
       </v-col>
 
       <v-col col="4">
         <v-subheader class="grey--text text--lighten-1 pl-0 subheader"></v-subheader>
-        <v-select
-          :items="YearList" label="年份" outlined hide-details
+        <v-text-field
+          single-line outlined hide-details color="blue-grey" label="2025"
         />
       </v-col>
 
@@ -55,8 +55,6 @@ export default {
   data () {
     return {
       visaImage: 'https://i.imgur.com/lY1wk82.png',
-      YearList: ['2030', '2029', '2028', '2017', 'whatever'],
-      MonthList: ['January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December'],
       valueOfCardNumber: '4478 6322 9923 8990',
       mask: 'credit-card'
     }

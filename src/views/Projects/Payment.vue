@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <Timeboard/>
       <v-col
         cols="12"
         xl="8"
@@ -40,7 +39,7 @@
                     {{ project.title }}
                   </v-card-title>
                   <v-card-subtitle>
-                    {{ project.subTitle }}
+                    {{ project.subtitle }}
                   </v-card-subtitle>
                 </div>
               </div>
@@ -87,7 +86,10 @@
                   class="mt-10"
                   dark
                 ></v-radio>
-                <h1 v-if="!show" class="white--text">ATM</h1>
+                <span v-if="!show" class="white--text">
+                  虛擬帳號轉帳因要等待銀行於工作天回傳，限量的選項可能會在入帳前售罄並造成贊助失敗。<br>
+                  臨櫃繳款的截止期限，必須在週一至週五（不含例假日）的下午三點半前完成，週六的郵局轉帳將會造成交易失敗。
+                </span>
               </v-radio-group>
             </v-theme-provider>
             <v-btn
@@ -110,27 +112,23 @@
           </v-stepper-step>
 
           <v-stepper-content step="3">
-            <form>
+            <v-form @submit.prevent="submit" ref="form">
               <v-row>
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="name"
-                    :error-messages="nameErrors"
+                    :rules="nameRules"
                     :counter="10"
                     label="姓名"
-                    @input="$v.name.$touch()"
-                    @blur="$v.name.$touch()"
                     color="white"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="phone"
-                    :error-messages="phoneErrors"
+                    :rules="phoneRules"
                     :counter="10"
                     label="聯絡電話"
-                    @input="$v.phone.$touch()"
-                    @blur="$v.phone.$touch()"
                     color="white"
                   ></v-text-field>
                 </v-col>
@@ -139,10 +137,8 @@
                 <v-col>
                   <v-text-field
                     v-model="email"
-                    :error-messages="emailErrors"
+                    :rules="emailRules"
                     label="電子信箱"
-                    @input="$v.email.$touch()"
-                    @blur="$v.email.$touch()"
                     color="white"
                     class="mb-10"
                   ></v-text-field>
@@ -160,28 +156,23 @@
                     thumb-size="35"
                     ticks
                     color="blue-grey"
-                    :error-messages="fundAmountErrors"
-                    @change="$v.fundAmount.$touch()"
-                    @blur="$v.fundAmount.$touch()"
                   ></v-slider>
                 </v-col>
                 <v-col cols="12" md="1">
-                  <v-text-field v-model="fundAmount" type="number" prefix="$"></v-text-field>
+                  <v-text-field v-model="fundAmount" :rules="fundAmountRules" prefix="$"></v-text-field>
                 </v-col>
               </v-row>
           <v-checkbox
             v-model="checkbox"
-            :error-messages="checkboxErrors"
+            :rules="checkboxRules"
             label="我同意隱私權條款"
-            @change="$v.checkbox.$touch()"
-            @blur="$v.checkbox.$touch()"
             color="white"
             class="mb-4"
           ></v-checkbox>
 
           <v-btn
+            type="submit"
             class="mr-4 black--text"
-            @click="submit"
             color="amber"
           >
             送出
@@ -189,7 +180,7 @@
           <v-btn text @click="e6 = 2">
             返回
           </v-btn>
-            </form>
+            </v-form>
           </v-stepper-content>
 
           </v-stepper>
@@ -200,84 +191,86 @@
 </template>
 
 <script>
-import Timeboard from '../../components/Timeboard.vue'
 import CreditCard from '../../components/CreditCard.vue'
-import { required, maxLength, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'Payment',
   components: {
-    Timeboard,
     CreditCard
-  },
-
-  // 表單驗證
-  validations: {
-    name: { required, maxLength: maxLength(10) },
-    phone: { required, maxLength: maxLength(10) },
-    email: { email },
-    fundAmount: { required },
-    checkbox: {
-      checked (val) {
-        return val
-      }
-    }
   },
   data () {
     return {
       project: '',
       e6: 1,
       show: true,
+      // 表單資料
       name: '',
       phone: '',
       email: '',
-      fundAmount: null,
-      checkbox: false
+      fundAmount: '1000',
+      checkbox: false,
+      // 表單驗證
+      nameRules: [
+        v => !!v || '必填欄位',
+        v => v.length <= 10 || '請輸入 10 個字以下'
+      ],
+      phoneRules: [
+        v => !!v || '必填欄位',
+        v => v.length === 10 || '請輸入正確手機號碼'
+      ],
+      emailRules: [
+        v => /.+@.+/.test(v) || '請輸入有效電子郵件'
+      ],
+      fundAmountRules: [
+        v => !!v || '必填欄位'
+      ],
+      checkboxRules: [
+        v => !!v || '必填欄位'
+      ]
     }
   },
 
   computed: {
-    nameErrors () {
-      const errors = []
-      if (!this.$v.name.$dirty) return errors
-      !this.$v.name.maxLength && errors.push('請輸入 10 個字以下')
-      !this.$v.name.required && errors.push('必填欄位')
-      return errors
-    },
-    phoneErrors () {
-      const errors = []
-      if (!this.$v.phone.$dirty) return errors
-      !this.$v.phone.maxLength && errors.push('請輸入 10 個字以下')
-      !this.$v.phone.required && errors.push('必填欄位')
-      return errors
-    },
-    emailErrors () {
-      const errors = []
-      if (!this.$v.email.$dirty) return errors
-      !this.$v.email.email && errors.push('請輸入有效電子郵件')
-      return errors
-    },
-    fundAmountErrors () {
-      const errors = []
-      if (!this.$v.fundAmount.$dirty) return errors
-      !this.$v.fundAmount.required && errors.push('必填欄位')
-      return errors
-    },
-    checkboxErrors () {
-      const errors = []
-      if (!this.$v.checkbox.$dirty) return errors
-      !this.$v.checkbox.checked && errors.push('必須勾選')
-      return errors
+    user () {
+      return this.$store.state.user
     }
   },
 
   methods: {
     submit () {
-      this.$v.$touch()
-      if (this.$v.$invalid) return
+      if (!this.$refs.form.validate()) return
 
-      alert('表單已送出')
-      this.$router.replace('headphones')
+      this.axios.patch(process.env.VUE_APP_API + '/users/' + this.user.id + '/' + this.$route.params.id, { name: this.name, phone: this.phone, email: this.email, fundAmount: this.fundAmount })
+        .then(res => {
+          if (res.data.success) {
+            this.$swal({
+              icon: 'success',
+              iconColor: '#FFC107',
+              title: '完成募資訂單',
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
+            // 清空表單
+            this.$refs.form.reset()
+            // 回計畫頁面
+            this.$router.push('/projects/' + this.$route.params.id)
+          } else {
+            this.$swal({
+              icon: 'error',
+              title: res.data.message,
+              confirmButtonColor: '#607D8B',
+              confirmButtonText: '確定'
+            })
+          }
+        })
+        .catch(err => {
+          this.$swal({
+            icon: 'error',
+            title: err.response.data.message,
+            confirmButtonColor: '#607D8B',
+            confirmButtonText: '確定'
+          })
+        })
     }
   },
   mounted () {
@@ -287,11 +280,21 @@ export default {
           this.project = res.data.result[0]
           this.project.image = process.env.VUE_APP_API + '/projects/image/' + this.project.image
         } else {
-          alert(res.data.message)
+          this.$swal({
+            icon: 'error',
+            title: res.data.message,
+            confirmButtonColor: '#607D8B',
+            confirmButtonText: '確定'
+          })
         }
       })
       .catch(err => {
-        alert(err.response.data.message)
+        this.$swal({
+          icon: 'error',
+          title: err.response.data.message,
+          confirmButtonColor: '#607D8B',
+          confirmButtonText: '確定'
+        })
       })
   }
 }

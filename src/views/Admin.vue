@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container id="admin">
     <v-row justify="center">
       <v-col cols="12" md="2">
         <v-sheet rounded="lg">
@@ -9,7 +9,7 @@
               :key="list.name"
               link
               exact
-              :to="'/member' + list.path"
+              :to="'/admin/' + list.path"
             >
               <v-list-item-content>
                 <v-list-item-title>
@@ -36,25 +36,17 @@
 
 <script>
 export default {
-  name: 'AddRecords',
+  name: 'Admin',
   data () {
     return {
       lists: [
         {
-          name: '贊助紀錄',
+          name: '所有計畫',
           path: ''
         },
         {
-          name: '收藏清單',
-          path: '/wishlists'
-        },
-        {
-          name: '新增紀錄',
-          path: '/addRecords'
-        },
-        {
-          name: '留言紀錄',
-          path: '/msgRecords'
+          name: '會員管理',
+          path: 'users'
         }
       ]
     }

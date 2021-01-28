@@ -1,25 +1,22 @@
 <template>
   <v-app id="inspire">
-    <Navbar/>
+    <NavbarAdmin v-if="user.name === 'admin'"/>
+    <Navbar v-else/>
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-snackbar
-      v-model="$store.state.snackbar.show"
-      :right="true" :top="true" :timeout="1500" light
-    >
-      {{ $store.state.snackbar.message }}
-    </v-snackbar>
   </v-app>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
+import NavbarAdmin from './components/NavbarAdmin.vue'
 
 export default {
   name: 'App',
   components: {
-    Navbar
+    Navbar,
+    NavbarAdmin
   },
   computed: {
     user () {
