@@ -11,7 +11,7 @@ import routerProject from './routes/projects.js'
 
 dotenv.config()
 
-mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 
 const app = express()
 

@@ -21,16 +21,20 @@ const fundSchema = new Schema (
       ref: 'projects'
     },
     name: {
-      type: String
+      type: String,
+      required: [true, '請填寫姓名']
+      
     },
     phone: {
-      type: String
+      type: String,
+      required: [true, '請填寫連絡電話']
     },
     email: {
       type: String
     },
     fundAmount: {
-      type: Number
+      type: Number,
+      required: [true, '請輸入募資金額']
     }
   },
   {
@@ -51,7 +55,7 @@ const userSchema = new Schema (
       minlength: [6 , '請輸入 6 個字以上'],
       required: true
     },
-    fundRecords: {
+    funds: {
       type: [fundSchema]
     },
     wishlists: {

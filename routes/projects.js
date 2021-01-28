@@ -1,5 +1,5 @@
 import express from 'express'
-import { getProject, addProject, getImage, deleteProject } from '../controllers/projects.js';
+import { getProject, addProject, getImage, deleteProject, editProject, addMsg, getMsg, success } from '../controllers/projects.js';
 
 const router = express.Router()
 
@@ -12,9 +12,19 @@ router.get('/', getProject)
 
 // 新增計畫
 router.post('/add', addProject)
-// 查詢圖片
+// 取得圖片
 router.get('/image/:file', getImage)
 // 刪除計畫
 router.delete('/:id', deleteProject)
+// 修改計畫
+router.patch('/:id', editProject)
+
+// 新增留言
+router.patch('/msgBoard/:id/:user', addMsg)
+// 取得各計劃留言
+router.get('/msgBoard/:id', getMsg)
+
+// 募資成功
+router.patch('/success/:id', success)
 
 export default router

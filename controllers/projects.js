@@ -3,7 +3,8 @@ import FTPStorage from 'multer-ftp'
 import axios from 'axios'
 import path from 'path'
 import fs from 'fs'
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
+import mongoose from 'mongoose'
 
 import projects from '../models/projects.js'
 
@@ -36,7 +37,7 @@ if (process.env.DEV === 'true') {
   })
 }
 
-// 查詢計畫
+// 取得計畫
 export const getProject = async (req, res) => {
   try {
     const search = {}
@@ -49,7 +50,8 @@ export const getProject = async (req, res) => {
     }
     // console.log(search);
     const result = await projects.find(search)
-    res.status(200).send({ success: true, message: '', result })
+    const count = result.length
+    res.status(200).send({ success: true, message: '', count, result })
   } catch (error) {
     res.status(500).send({ success: false, message: '伺服器錯誤' })
   }
@@ -109,11 +111,13 @@ export const addProject = async (req, res) => {
         const result = await projects.create({
           user: req.session.user._id,
           title: req.body.title,
-          subTitle: req.body.subTitle,
+          subtitle: req.body.subtitle,
           proposer: req.body.proposer,
           description: req.body.description,
           targetAmount: req.body.targetAmount,
-          image: file
+          image: file,
+          begin: req.body.begin,
+          finish: req.body.finish
         })
         res.status(201).send({ success: true, message: '', result })
       } catch (error) {
@@ -129,7 +133,7 @@ export const addProject = async (req, res) => {
   })
 }
 
-// 查詢圖片
+// 取得圖片
 export const getImage = async (req, res) => {
   // 開發環境回傳本機圖片
   if (process.env.DEV === 'true') {
@@ -165,7 +169,7 @@ export const deleteProject = async (req, res) => {
     let result = await projects.findById(req.params.id)
     if (result === null) {
       res.status(404).send({ success: false, message: '找不到資料' })
-    } else if (result.user !== req.session.user._id) {
+    } else if (req.session.user.account !== 'admin' && result.user.toString() !== req.session.user._id) {
       res.status(403).send({ success: false, message: '沒有權限' })
     } else {
       result = await projects.findByIdAndDelete(req.params.id)
@@ -183,5 +187,137 @@ export const deleteProject = async (req, res) => {
     } else {
       res.status(500).send({ success: false, message: '伺服器錯誤' })
     }
+    console.log(error)
+  }
+}
+
+// 修改計畫
+export const editProject = async (req, res) => {
+  if (req.session.user === undefined) {
+    res.status(401).send({ success: false, message: '未登入' })
+    return
+  }
+  if (!req.headers['content-type'] || !req.headers['content-type'].includes('application/json')) {
+    res.status(400).send({ success: false, message: '資料格式不符' })
+    return
+  }
+
+  try {
+    let result = await projects.findById(req.params.id)
+    if (result === null) {
+      res.status(404).send({ success: false, message: '找不到資料' })
+    } else if (req.session.user.account !== 'admin' && result.user.toString() !== req.session.user._id) {
+      res.status(403).send({ success: false, message: '沒有權限' })
+    } else {
+      result = await projects.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      res.status(200).send({ success: true, message: '', result })
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const key = Object.keys(error.errors)[0]
+      const message = error.errors[key].message
+      res.status(400).send({ success: false, message })
+    } else if (error.name === 'CastError') {
+      res.status(400).send({ success: false, message: 'ID 格式錯誤' })
+    } else {
+      res.status(500).send({ success: false, message: '伺服器錯誤' })
+    }
+    // console.log(error)
+  }
+}
+
+// 新增留言
+export const addMsg = async (req, res) => {
+  if (req.session.user === undefined) {
+    res.status(401).send({ success: false, message: '請先登入'})
+    return
+  }
+  if (!req.headers['content-type'] || !req.headers['content-type'].includes('application/json')) {
+    res.status(400).send({ success: false, message: '資料格式不符' })
+    return
+  }
+
+  try {
+    let result = await projects.findById(req.params.id)
+    if (result === null) {
+      res.status(404).send({ success: false, message: '找不到使用者' })
+    } else if (req.params.user !== req.session.user._id ) {
+      res.status(403).send({ success: false, message: '沒有權限' })
+    } else {
+      result = await projects.findByIdAndUpdate(req.params.id,
+        {
+          $push: {
+            msgBoard: {
+              user: req.params.user,
+              message: req.body.message,
+              date: new Date()
+            }
+          }
+        }, 
+        {new: true}
+      ).populate('msgBoard.user', 'account')
+      const msgBoard = result.msgBoard
+      res.status(200).send({ success: true, message: '', msgBoard })
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const key = Object.keys(error.errors)[0]
+      const message = error.errors[key].message
+      res.status(400).send({ success: false, message })
+    } else if (error.name === 'CastError') {
+      res.status(400).send({ success: false, message: 'ID 格式錯誤' })
+    } else {
+      res.status(500).send({ success: false, message: '伺服器錯誤' })
+    }
+    console.log(error)
+  }
+}
+
+// 取得留言
+export const getMsg = async (req, res) => {
+  try {
+    const result = await projects.findById(req.params.id).populate('msgBoard.user', 'account')
+    const msgBoard = result.msgBoard
+    res.status(200).send({ success: true, message: '', msgBoard })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const key = Object.keys(error.errors)[0]
+      const message = error.errors[key].message
+      res.status(400).send({ success: false, message })
+    } else if (error.name === 'CastError') {
+      res.status(400).send({ success: false, message: 'ID 格式錯誤' })
+    } else {
+      res.status(500).send({ success: false, message: '伺服器錯誤' })
+    }
+    console.log(error)
+  }
+}
+
+// 募資成功
+export const success = async (req, res) => {
+  if (req.session.user === undefined) {
+    res.status(401).send({ success: false, message: '未登入' })
+    return
+  }
+
+  try {
+    let result = await projects.findById(req.params.id)
+    if (result === null) {
+      res.status(404).send({ success: false, message: '找不到資料' })
+    } else {
+      result = await projects.findByIdAndUpdate(req.params.id, {sucess: true}, { new: true })
+      res.status(200).send({ success: true, message: '', result })
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const key = Object.keys(error.errors)[0]
+      const message = error.errors[key].message
+      res.status(400).send({ success: false, message })
+    } else if (error.name === 'CastError') {
+      res.status(400).send({ success: false, message: 'ID 格式錯誤' })
+    } else {
+      res.status(500).send({ success: false, message: '伺服器錯誤' })
+    }
+    // console.log(error)
   }
 }
