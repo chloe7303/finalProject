@@ -24,7 +24,4 @@ router.patch('/msgBoard/:id/:user', addMsg)
 // 取得各計劃留言
 router.get('/msgBoard/:id', getMsg)
 
-// 募資成功
-router.patch('/success/:id', success)
-
 export default router
