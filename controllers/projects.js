@@ -153,6 +153,7 @@ export const getImage = async (req, res) => {
     }).then(res => {
       res.data.pipe(res)
     }).catch(error => {
+      console.log(error)
       res.status(error.response.status).send({ success: false, message: '取得圖片失敗' })
     })
   }
