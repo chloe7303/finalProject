@@ -68,20 +68,18 @@
 <script>
 export default {
   name: 'CrowdfundingCard',
-  data () {
-    return {
-      projects: [],
-      wishlists: [],
-      addSnackbar: {
-        show: false,
-        message: '加入收藏清單！'
-      },
-      delSnackbar: {
-        show: false,
-        message: '取消收藏'
-      }
+  data: () => ({
+    projects: [],
+    wishlists: [],
+    addSnackbar: {
+      show: false,
+      message: '加入收藏清單！'
+    },
+    delSnackbar: {
+      show: false,
+      message: '取消收藏'
     }
-  },
+  }),
   computed: {
     user () {
       return this.$store.state.user
@@ -157,16 +155,8 @@ export default {
         this.projects = res.data.result.map(project => {
           project.image = `${process.env.VUE_APP_API}/projects/image/${project.image}`
           project.progress = Math.ceil((project.raisedAmount / project.targetAmount) * 100)
-          // 如果募資成功
-          // if (project.progress === 100) {
-          //   this.axios.patch(`${process.env.VUE_APP_API}/projects/success/${project._id}`)
-          //   if (res.data.success) {
-          //     this.project.success = true
-          //   }
-          // }
           return project
         })
-        return
       } else {
         this.$swal({
           icon: 'error',
@@ -175,7 +165,9 @@ export default {
           confirmButtonText: '確定'
         })
       }
+      return
     }
+    // 有登入時
     try {
       let res = await this.axios.get(`${process.env.VUE_APP_API}/users/wishlists/${this.user.id}`)
       if (res.data.success) {

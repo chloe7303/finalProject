@@ -123,7 +123,7 @@
                     x-large
                     :to="'/payment/' + project._id"
                     class="mr-4"
-                    :disabled="project.success"
+                    :disabled="project.raisedAmount >= project.targetAmount "
                   >
                     <h2 class="blue-grey--text text--darken-2">贊助專案</h2>
                   </v-btn>
