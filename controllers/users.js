@@ -158,11 +158,6 @@ export const fund = async (req, res) => {
           }
         }
       , {new: true})
-
-      // 如果募資成功
-      // if (raisedAmount === targetAmount) {
-      //   // code
-      // }
       res.status(200).send({ success: true, message: '', result })
     }
   } catch (error) {
