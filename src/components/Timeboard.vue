@@ -1,7 +1,7 @@
 <template>
-  <v-sheet rounded="lg" min-height="268" class="pa-8 pa-sm-10">
-    <h1 class="font-weight-bold pb-8">倒數募資</h1>
-    <h2 class="font-weight-medium">{{ title }}</h2>
+  <v-sheet rounded="lg" min-height="260" class="pa-8 pa-sm-10">
+    <h1 class="font-weight-bold pb-4">倒數募資</h1>
+    <h3 class="font-weight-medium">{{ title }}</h3>
     <v-row justify="center">
       <v-card
         height="100" color="blue-grey darken-3" elevation="24"
@@ -35,7 +35,7 @@ export default {
   name: 'Timeboard',
   data () {
     return {
-      title: '募資計畫一'
+      title: 'JOJ | 簡約藍牙音響'
     }
   }
 }

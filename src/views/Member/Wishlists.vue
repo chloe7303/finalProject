@@ -57,11 +57,9 @@
 <script>
 export default {
   name: 'Wishlists',
-  data () {
-    return {
-      wishlists: []
-    }
-  },
+  data: () => ({
+    wishlists: []
+  }),
   computed: {
     user () {
       return this.$store.state.user

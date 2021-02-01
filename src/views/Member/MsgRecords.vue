@@ -39,11 +39,9 @@
 <script>
 export default {
   name: 'MsgRecords',
-  data () {
-    return {
-      msgBoards: []
-    }
-  },
+  data: () => ({
+    msgBoards: []
+  }),
   computed: {
     user () {
       return this.$store.state.user

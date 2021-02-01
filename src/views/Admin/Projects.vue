@@ -121,23 +121,21 @@
 <script>
 export default {
   name: 'adminProjects',
-  data () {
-    return {
-      projects: [],
-      titleRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 15 || '請輸入 15 個字以下',
-        v => v.length >= 4 || '請輸入 4 個字以上'
-      ],
-      subtitleRules: [
-        v => v.length <= 50 || '請輸入 50 個字以下'
-      ],
-      descriptionRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 300 || '請輸入 300 個字以下'
-      ]
-    }
-  },
+  data: () => ({
+    projects: [],
+    titleRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 15 || '請輸入 15 個字以下',
+      v => v.length >= 4 || '請輸入 4 個字以上'
+    ],
+    subtitleRules: [
+      v => v.length <= 50 || '請輸入 50 個字以下'
+    ],
+    descriptionRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 300 || '請輸入 300 個字以下'
+    ]
+  }),
   computed: {
     user () {
       return this.$store.state.user

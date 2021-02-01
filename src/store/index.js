@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   // production 時要關閉 strict mode
-  strict: true,
+  // strict: true,
   state: {
     user: {
       name: '',

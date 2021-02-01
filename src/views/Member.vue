@@ -37,27 +37,25 @@
 <script>
 export default {
   name: 'AddRecords',
-  data () {
-    return {
-      lists: [
-        {
-          name: '贊助紀錄',
-          path: ''
-        },
-        {
-          name: '收藏清單',
-          path: '/wishlists'
-        },
-        {
-          name: '新增紀錄',
-          path: '/addRecords'
-        },
-        {
-          name: '留言紀錄',
-          path: '/msgRecords'
-        }
-      ]
-    }
-  }
+  data: () => ({
+    lists: [
+      {
+        name: '贊助紀錄',
+        path: ''
+      },
+      {
+        name: '收藏清單',
+        path: '/wishlists'
+      },
+      {
+        name: '新增紀錄',
+        path: '/addRecords'
+      },
+      {
+        name: '留言紀錄',
+        path: '/msgRecords'
+      }
+    ]
+  })
 }
 </script>

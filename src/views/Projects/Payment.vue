@@ -198,37 +198,35 @@ export default {
   components: {
     CreditCard
   },
-  data () {
-    return {
-      project: '',
-      e6: 1,
-      show: true,
-      // 表單資料
-      name: '',
-      phone: '',
-      email: '',
-      fundAmount: '1000',
-      checkbox: false,
-      // 表單驗證
-      nameRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 10 || '請輸入 10 個字以下'
-      ],
-      phoneRules: [
-        v => !!v || '必填欄位',
-        v => v.length === 10 || '請輸入正確手機號碼'
-      ],
-      emailRules: [
-        v => /.+@.+/.test(v) || '請輸入有效電子郵件'
-      ],
-      fundAmountRules: [
-        v => !!v || '必填欄位'
-      ],
-      checkboxRules: [
-        v => !!v || '必填欄位'
-      ]
-    }
-  },
+  data: () => ({
+    project: '',
+    e6: 1,
+    show: true,
+    // 表單資料
+    name: '',
+    phone: '',
+    email: '',
+    fundAmount: '1000',
+    checkbox: false,
+    // 表單驗證
+    nameRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 10 || '請輸入 10 個字以下'
+    ],
+    phoneRules: [
+      v => !!v || '必填欄位',
+      v => v.length === 10 || '請輸入正確手機號碼'
+    ],
+    emailRules: [
+      v => /.+@.+/.test(v) || '請輸入有效電子郵件'
+    ],
+    fundAmountRules: [
+      v => !!v || '必填欄位'
+    ],
+    checkboxRules: [
+      v => !!v || '必填欄位'
+    ]
+  }),
 
   computed: {
     user () {

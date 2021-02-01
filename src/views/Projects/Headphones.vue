@@ -123,6 +123,7 @@
                     x-large
                     :to="'/payment/' + project._id"
                     class="mr-4"
+                    :disabled="project.success"
                   >
                     <h2 class="blue-grey--text text--darken-2">贊助專案</h2>
                   </v-btn>
@@ -158,24 +159,22 @@
 <script>
 export default {
   name: 'Headphones',
-  data () {
-    return {
-      project: {},
-      wishlists: [],
-      showMsg: false,
-      msgBoard: [],
-      message: '',
-      favorite: '',
-      addSnackbar: {
-        show: false,
-        message: '加入收藏清單！'
-      },
-      delSnackbar: {
-        show: false,
-        message: '取消收藏'
-      }
+  data: () => ({
+    project: {},
+    wishlists: [],
+    showMsg: false,
+    msgBoard: [],
+    message: '',
+    favorite: '',
+    addSnackbar: {
+      show: false,
+      message: '加入收藏清單！'
+    },
+    delSnackbar: {
+      show: false,
+      message: '取消收藏'
     }
-  },
+  }),
   computed: {
     user () {
       return this.$store.state.user
@@ -279,7 +278,8 @@ export default {
       this.axios.patch(`${process.env.VUE_APP_API}/users/msgboard/${this.user.id}/${message._id}`)
         .then(res => {
           if (res.data.success) {
-            this.msgBoards.splice(i, 1)
+            const idx = this.msgBoard.findIndex(msg => msg._id === message._id)
+            this.msgBoard.splice(idx, 1)
           } else {
             this.$swal({
               icon: 'error',
@@ -290,6 +290,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log(err)
           this.$swal({
             icon: 'error',
             title: err.response.data.message,

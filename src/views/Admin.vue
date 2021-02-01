@@ -37,19 +37,17 @@
 <script>
 export default {
   name: 'Admin',
-  data () {
-    return {
-      lists: [
-        {
-          name: '所有計畫',
-          path: ''
-        },
-        {
-          name: '會員管理',
-          path: 'users'
-        }
-      ]
-    }
-  }
+  data: () => ({
+    lists: [
+      {
+        name: '所有計畫',
+        path: ''
+      },
+      {
+        name: '會員管理',
+        path: 'users'
+      }
+    ]
+  })
 }
 </script>

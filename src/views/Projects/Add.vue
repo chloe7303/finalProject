@@ -51,6 +51,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-file-input
+                  type="file"
                   accept="image/*"
                   v-model="image"
                   :rules="imageRules"
@@ -90,7 +91,7 @@
                 md="6"
               >
                 <v-text-field
-                  v-model="dateRangeText"
+                  :value="dateRangeText"
                   label="計畫期間"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -117,42 +118,40 @@
 <script>
 export default {
   name: 'Add',
-  data () {
-    return {
-      title: '',
-      subtitle: '',
-      proposer: '',
-      targetAmount: '',
-      image: '',
-      description: '',
-      // 表單驗證
-      titleRules: [
-        v => !!v || '必填欄位',
-        v => v.length >= 4 || '請輸入 4 個字以上',
-        v => v.length <= 15 || '請輸入 15 個字以下'
-      ],
-      proposerRules: [
-        v => !!v || '必填欄位'
-      ],
-      subtitleRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 15 || '請輸入 50 個字以下'
-      ],
-      targetAmountRules: [
-        v => !!v || '必填欄位',
-        v => !isNaN(v) || '請輸入數字'
-      ],
-      imageRules: [
-        v => !!v || '請上傳圖片'
-      ],
-      descriptionRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 300 || '請輸入 300 個字以下'
-      ],
-      // 日期
-      dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)]
-    }
-  },
+  data: () => ({
+    title: '',
+    subtitle: '',
+    proposer: '',
+    targetAmount: '',
+    image: [],
+    description: '',
+    // 表單驗證
+    titleRules: [
+      v => !!v || '必填欄位',
+      v => v.length >= 4 || '請輸入 4 個字以上',
+      v => v.length <= 15 || '請輸入 15 個字以下'
+    ],
+    proposerRules: [
+      v => !!v || '必填欄位'
+    ],
+    subtitleRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 15 || '請輸入 50 個字以下'
+    ],
+    targetAmountRules: [
+      v => !!v || '必填欄位',
+      v => !isNaN(v) || '請輸入數字'
+    ],
+    imageRules: [
+      v => !!v || '請上傳圖片'
+    ],
+    descriptionRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 300 || '請輸入 300 個字以下'
+    ],
+    // 日期
+    dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)]
+  }),
 
   computed: {
     dateRangeText () {

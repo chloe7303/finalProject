@@ -4,6 +4,7 @@ import VueAxios from 'vue-axios'
 import Vuelidate from 'vuelidate'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
+import VueGtag from 'vue-gtag'
 
 import App from './App.vue'
 import router from './router'
@@ -16,6 +17,11 @@ axios.defaults.withCredentials = true
 Vue.use(VueAxios, axios)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2)
+Vue.use(VueGtag, {
+  config: {
+    id: process.env.VUE_APP_GA
+  }
+})
 
 Vue.config.productionTip = false
 

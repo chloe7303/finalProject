@@ -140,20 +140,18 @@ export default {
       repeatPassword: { sameAsPassword: sameAs('password') }
     }
   },
-  data () {
-    return {
-      step: 0,
-      loginForm: {
-        account: '',
-        password: ''
-      },
-      registerForm: {
-        account: '',
-        password: '',
-        repeatPassword: ''
-      }
+  data: () => ({
+    step: 0,
+    loginForm: {
+      account: '',
+      password: ''
+    },
+    registerForm: {
+      account: '',
+      password: '',
+      repeatPassword: ''
     }
-  },
+  }),
   computed: {
     user () {
       return this.$store.state.user

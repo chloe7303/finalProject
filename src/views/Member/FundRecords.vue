@@ -48,11 +48,9 @@
 <script>
 export default {
   name: 'FundRecords',
-  data () {
-    return {
-      funds: []
-    }
-  },
+  data: () => ({
+    funds: []
+  }),
   computed: {
     user () {
       return this.$store.state.user

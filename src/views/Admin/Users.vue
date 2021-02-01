@@ -5,7 +5,7 @@
     <v-card
       max-width="100%"
       outlined
-      v-for="user in users"
+      v-for="(user, i) in users"
       :key="user._id"
       class="mb-5"
     >
@@ -58,11 +58,9 @@
 <script>
 export default {
   name: 'adminUsers',
-  data () {
-    return {
-      users: []
-    }
-  },
+  data: () => ({
+    users: []
+  }),
   computed: {
     user () {
       return this.$store.state.user

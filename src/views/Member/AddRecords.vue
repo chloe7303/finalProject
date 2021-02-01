@@ -121,24 +121,22 @@
 <script>
 export default {
   name: 'AddRecords',
-  data () {
-    return {
-      projects: [],
-      titleRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 10 || '請輸入 10 個字以下',
-        v => v.length >= 4 || '請輸入 4 個字以上'
-      ],
-      subtitleRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 50 || '請輸入 50 個字以下'
-      ],
-      descriptionRules: [
-        v => !!v || '必填欄位',
-        v => v.length <= 300 || '請輸入 300 個字以下'
-      ]
-    }
-  },
+  data: () => ({
+    projects: [],
+    titleRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 10 || '請輸入 10 個字以下',
+      v => v.length >= 4 || '請輸入 4 個字以上'
+    ],
+    subtitleRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 50 || '請輸入 50 個字以下'
+    ],
+    descriptionRules: [
+      v => !!v || '必填欄位',
+      v => v.length <= 300 || '請輸入 300 個字以下'
+    ]
+  }),
   computed: {
     user () {
       return this.$store.state.user
@@ -146,19 +144,32 @@ export default {
   },
   methods: {
     del (project, i) {
-      this.axios.delete(`${process.env.VUE_APP_API}/projects/${project._id}`)
-        .then(res => {
-          if (res.data.success) {
-            this.projects.splice(i, 1)
-          } else {
-            this.$swal({
-              icon: 'error',
-              title: res.data.message,
-              confirmButtonColor: '#607D8B',
-              confirmButtonText: '確定'
+      this.$swal({
+        title: '確定刪除計畫?',
+        icon: 'warning',
+        iconColor: '#FFC107',
+        showCancelButton: true,
+        confirmButtonColor: '#607D8B',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '確定',
+        cancelButtonText: '取消'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.axios.delete(`${process.env.VUE_APP_API}/projects/${project._id}`)
+            .then(res => {
+              if (res.data.success) {
+                this.projects.splice(i, 1)
+              } else {
+                this.$swal({
+                  icon: 'error',
+                  title: res.data.message,
+                  confirmButtonColor: '#607D8B',
+                  confirmButtonText: '確定'
+                })
+              }
             })
-          }
-        })
+        }
+      })
         .catch(err => {
           this.$swal({
             icon: 'error',
