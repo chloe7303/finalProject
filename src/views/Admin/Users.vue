@@ -28,7 +28,7 @@
                   <v-list-item three-line>
                   <v-list-item-content>
                     <v-list-item-title class="title mb-3">
-                      {{ fund.project.title }}
+                      {{ fund.project ? fund.project.title : '' }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="subtitle-1 amber--text">$ 贊助金額：{{ fund.fundAmount }}</v-list-item-subtitle>
                     <v-list-item-subtitle>贊助人：{{ fund.name }}</v-list-item-subtitle>
