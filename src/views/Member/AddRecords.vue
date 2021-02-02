@@ -16,7 +16,7 @@
               label="計畫標題"
               v-model="project.titleModel"
               :rules="titleRules"
-              counter="10"
+              counter="15"
               color="blue-grey"
               outlined
               clearable
@@ -125,7 +125,7 @@ export default {
     projects: [],
     titleRules: [
       v => !!v || '必填欄位',
-      v => v.length <= 10 || '請輸入 10 個字以下',
+      v => v.length <= 15 || '請輸入 15 個字以下',
       v => v.length >= 4 || '請輸入 4 個字以上'
     ],
     subtitleRules: [
