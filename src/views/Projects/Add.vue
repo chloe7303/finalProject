@@ -136,7 +136,7 @@ export default {
     ],
     subtitleRules: [
       v => !!v || '必填欄位',
-      v => v.length <= 15 || '請輸入 50 個字以下'
+      v => v.length <= 50 || '請輸入 50 個字以下'
     ],
     targetAmountRules: [
       v => !!v || '必填欄位',
